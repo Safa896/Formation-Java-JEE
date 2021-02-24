@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+
+	<h:form id="f1">
+
+		<p:commandButton value="Nouveau compte" styleClass="ui-button-success"
+			onclick="PF('dlg').show()" process="@this"
+			action="#{compteBean.clickAdd()}" update="panel" />
+		<p:dataTable id="tab" var="cpt" value="#{compteBean.list}">
+
+			<p:column headerText="Date création">
+				<h:outputText value="#{cpt.dateCreation}">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Numéro compte">
+				<h:outputText value="#{cpt.numCompte}" />
+			</p:column>
+
+			<p:column headerText="Client">
+				<h:outputText value="#{cpt.personne.nom}  #{cpt.personne.prenom}" />
+			</p:column>
+
+			<p:column headerText="Type compte">
+				<h:outputText value="#{cpt.typeCompte}" />
+			</p:column>
+
+			<p:column headerText="Solde">
+				<h:outputText value="#{cpt.solde}" />
+			</p:column>
+			<p:column headerText="Opérations">
+				<p:commandButton id="btnDelete" icon="pi pi-trash"
+					styleClass="rounded-button ui-button-danger" process="@this"
+					action="#{compteBean.supprimer()}" update="tab">
+					<p:tooltip for="btnDelete" value="Supprimer" position="top" />
+					<f:setPropertyActionListener value="#{cpt}"
+						target="#{compteBean.compte}" />
+					<p:confirm type="popup" header="Confirmation"
+						message="Voulez vous supprimer?" icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+				<p:spacer width="10"></p:spacer>
+				<p:commandButton id="btnEdit" icon="pi pi-pencil"
+					styleClass="rounded-button ui-button-warning" process="@this"
+					action="#{compteBean.clickEdit()}" update="f1:panel"
+					onclick="PF('dlg').show()">
+					<p:tooltip for="btnEdit" value="Editer" position="top" />
+					<f:setPropertyActionListener value="#{cpt}"
+						target="#{compteBean.compte}" />
+				</p:commandButton>
+			</p:column>
+
+		</p:dataTable>
+
+		<p:dialog header="Compte" widgetVar="dlg" modal="true"
+			showEffect="fade">
+			<h:panelGrid columns="2" id="panel">
+
+				<h:outputText value="Numéro compte" />
+				<p:inputText value="#{compteBean.compte.numCompte}" required="true"
+					requiredMessage="Numéro  compte réquis">
+				</p:inputText>
+
+				<h:outputText value="Date création" />
+				<p:calendar value="#{compteBean.compte.dateCreation}"
+					required="true" requiredMessage="date création réquis">
+				</p:calendar>
+
+
+
+				<h:outputText value="Client" />
+				<p:selectOneMenu filter="true" filterMatchMode="contains"
+					value="#{compteBean.compte.personne.cin}">
+					<f:selectItems value="#{personneBean.list}" var="pers"
+						itemLabel="#{pers.nom} #{pers.prenom}" itemValue="#{pers.cin}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Type Compte" />
+				<p:selectOneMenu value="#{compteBean.compte.typeCompte}">
+
+					<f:selectItem itemValue="Compte Courant" itemLabel="Compte Courant" />
+
+					<f:selectItem itemValue="Compte Epargne" itemLabel="Compte Epargne" />
+
+					<f:selectItem itemValue="Compte Chèquier"
+						itemLabel="Compte Chèquier" />
+
+
+					<f:selectItem itemValue="Compte devise" itemLabel="Compte devise" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Solde" />
+				<p:inputNumber value="#{compteBean.compte.solde}" required="true"
+					requiredMessage="Solde réquis">
+				</p:inputNumber>
+
+				<p:commandButton value="Ajouter" action="#{compteBean.ajouter()}"
+					update="tab" oncomplete="validForm(xhr, status, args)"
+					rendered="#{compteBean.btnAdd}"></p:commandButton>
+				<p:commandButton value="Modifier" action="#{compteBean.modifier()}"
+					update="tab" oncomplete="validForm(xhr, status, args)"
+					rendered="#{compteBean.btnEdit}"></p:commandButton>
+				<p:commandButton process="@this" value="Annuler"
+					oncomplete="PF('dlg').hide()"></p:commandButton>
+			</h:panelGrid>
+		</p:dialog>
+
+		<p:growl id="growl" showDetail="true">
+			<p:autoUpdate></p:autoUpdate>
+		</p:growl>
+
+
+		<script type="text/javascript">
+    function validForm(xhr, status, args) {
+        if(args.validationFailed || !args.valid) {
+            PF('dlg').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('dlg').hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+</script>
+		<p:confirmPopup global="true" showEffect="fade" hideEffect="fade">
+			<p:commandButton value="Non" type="button"
+				styleClass="ui-confirm-popup-no ui-button-flat" />
+			<p:commandButton value="Oui" type="button"
+				styleClass="ui-confirm-popup-yes" />
+		</p:confirmPopup>
+	</h:form>
+</body>
+</html>

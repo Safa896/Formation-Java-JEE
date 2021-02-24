@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+	<security:http use-expressions="true">
+		<security:csrf disabled="true" />
+		<security:intercept-url
+			pattern="/faces/admin/**" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url
+			pattern="/faces/views/**"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" />
+		<security:intercept-url
+			pattern="/faces/auth/**" access="permitAll" />
+		<security:form-login
+			login-page="/faces/auth/Login.xhtml"
+			login-processing-url="/faces/j_spring_security_check"
+			username-parameter="j_username" password-parameter="j_password"
+			authentication-failure-url="/faces/auth/Login.xhtml?error=1"
+			default-target-url="/faces/views/Personne.xhtml" />
+		<security:access-denied-handler
+			error-page="/faces/views/AccessDenied.xhtml" />
+
+	</security:http>
+	<security:authentication-manager>
+		<security:authentication-provider>
+<!-- 			<security:user-service> -->
+
+<!-- 				<security:user name="safa" password="safa" -->
+<!-- 					authorities="ROLE_ADMIN" /> -->
+<!-- 				<security:user name="fafi" password="fafi" -->
+<!-- 					authorities="ROLE_USER" /> -->
+
+
+<!-- 			</security:user-service> -->
+
+<security:jdbc-user-service data-source-ref="dataSource" authorities-by-username-query="select username,role from users where username=?" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+		<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver"></property>
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/formation_db"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value=""></property>
+	</bean>
+
+</beans>

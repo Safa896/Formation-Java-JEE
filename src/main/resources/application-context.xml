@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+	<bean id="persDao" class="com.ant.gc.dao.impl.PersonneDaoImpl">
+	</bean>
+	<bean id="persServ"
+		class="com.ant.gc.services.impl.PersonneServiceImpl">
+		<property name="personneDao" ref="persDao"></property>
+	</bean>
+
+	<bean id="cptDao" class="com.ant.gc.dao.impl.CompteDaoImpl">
+	</bean>
+	<bean id="cptServ"
+		class="com.ant.gc.services.impl.CompteServiceImpl">
+		<property name="compteDao" ref="cptDao"></property>
+	</bean>
+
+
+</beans>

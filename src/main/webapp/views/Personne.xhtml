@@ -1,0 +1,96 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head></h:head>
+<body>
+	<h:form>
+		<h:messages />
+		<h:panelGrid columns="2">
+
+			<h:outputText value="CIN" />
+			<h:inputText value="#{personneBean.personne.cin}"
+				readonly="#{personneBean.btnEdit}" />
+
+			<h:outputText value="Nom" />
+			<h:inputText value="#{personneBean.personne.nom}" />
+
+
+			<h:outputText value="Prénom" />
+			<h:inputText value="#{personneBean.personne.prenom}" />
+
+
+			<h:outputText value="Adresse" />
+			<h:inputText value="#{personneBean.personne.adresse}" />
+
+			<h:outputText value="Email" />
+			<h:inputText value="#{personneBean.personne.email}" />
+
+
+			<h:commandButton action="#{personneBean.ajouter()}" value="Ajouter"
+				rendered="#{personneBean.btnAdd}" />
+
+			<h:commandButton action="#{personneBean.modifier()}" value="Modifier"
+				rendered="#{personneBean.btnEdit}" />
+
+			<h:commandButton 
+			action="#{personneBean.clickAnnuler()}"
+				value="Annuler" />
+
+		</h:panelGrid>
+
+		<h:dataTable value="#{personneBean.list}" var="pers">
+
+			<h:column>
+				<f:facet name="header">CIN</f:facet>
+				<h:outputText value="#{pers.cin}" />
+			</h:column>
+
+
+			<h:column>
+				<f:facet name="header">Nom</f:facet>
+				<h:outputText value="#{pers.nom}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Prénom</f:facet>
+				<h:outputText value="#{pers.prenom}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Adresse</f:facet>
+				<h:outputText value="#{pers.adresse}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Email</f:facet>
+				<h:outputText value="#{pers.email}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Opérations</f:facet>
+				<h:commandButton action="#{personneBean.supprimer()}"
+					value="Supprimer" onclick="return confirm('T7eb tfassa5 ?')">
+
+					<f:setPropertyActionListener value="#{pers}"
+						target="#{personneBean.personne}" />
+
+				</h:commandButton>
+
+				<h:commandButton value="Editer" action="#{personneBean.clickEdit()}">
+
+					<f:setPropertyActionListener value="#{pers}"
+						target="#{personneBean.personne}" />
+
+
+				</h:commandButton>
+			</h:column>
+		</h:dataTable>
+
+
+
+	</h:form>
+</body>
+</html>
